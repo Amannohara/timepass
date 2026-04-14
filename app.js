@@ -117,11 +117,11 @@ function toast(msg, type='info') {
   clearTimeout(_toastT);
   _toastT = setTimeout(() => { el.style.animation=''; el.className='hidden'; }, 2800);
 }
-
+const BASE_URL = "https://hotshots.onrender.com";
 async function apiFetch(path, opts={}) {
   const h = { 'Content-Type':'application/json', ...opts.headers };
   if (S.token) h['Authorization'] = `Bearer ${S.token}`;
-  const res  = await fetch('/api' + path, { ...opts, headers:h });
+  const res = await fetch(BASE_URL + '/api' + path, { ...opts, headers:h });
   const data = await res.json();
   if (!res.ok) throw new Error(data?.message || 'Request failed');
   return data;
