@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Join HotShotz — Create Account</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+  <canvas id="mesh-canvas" aria-hidden="true"></canvas>
+  <div class="orbs" aria-hidden="true"><div class="orb orb-1"></div><div class="orb orb-2"></div></div>
+  <div class="auth-outer">
+    <div class="auth-card glass-strong r2">
+      <div class="auth-logo r1">
+        <div class="auth-logo-box">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+        </div>
+        <div class="auth-h1">JOIN THE ARENA</div>
+        <div class="auth-sub">Create your free account and start competing</div>
+      </div>
+      <div class="social-row">
+        <button class="btn-ghost social-btn" onclick="alert('Social login coming soon!')"><div class="social-ico" style="background:linear-gradient(135deg,#ea4335,#fbbc05)">G</div> Google</button>
+        <button class="btn-ghost social-btn" onclick="alert('Social login coming soon!')"><div class="social-ico" style="background:#1877f2">f</div> Facebook</button>
+      </div>
+      <div class="div-row"><div class="div-line"></div><span class="div-text">or with email</span><div class="div-line"></div></div>
+      <div class="auth-fields">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <input class="inp" id="f-name"    placeholder="Full name *" autocomplete="name"/>
+          <input class="inp" id="f-college" placeholder="College *"/>
+        </div>
+        <input class="inp" id="f-email"    type="email"    placeholder="College email *" autocomplete="email"/>
+        <div>
+          <input class="inp" id="f-pw" type="password" placeholder="Password (min 6) *" autocomplete="new-password" oninput="checkPW(this.value)"/>
+          <div class="pw-bar"><div class="pw-fill" id="pw-fill"></div></div>
+          <div class="pw-lbl" id="pw-lbl">Enter a password</div>
+        </div>
+      </div>
+      <button class="btn-brand auth-submit" id="sub-btn" onclick="doRegister()">Create Account →</button>
+      <div id="err-box" style="display:none;background:rgba(244,63,94,.12);border:1px solid rgba(244,63,94,.3);color:var(--hot2);padding:11px 14px;border-radius:12px;font-size:13px;margin-top:12px"></div>
+    </div>
+    <div class="auth-switch r3">
+      <span>Already have an account? </span>
+      <button onclick="location.href='login.html'">Sign in</button>
+    </div>
+  </div>
+  <script>
+    if(localStorage.getItem('hs_user')) location.href='index.html';
+    (function(){const c=document.getElementById('mesh-canvas'),x=c.getContext('2d');let W,H,n=[];function r(){W=c.width=innerWidth;H=c.height=innerHeight;}r();window.addEventListener('resize',r,{passive:true});for(let i=0;i<45;i++)n.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3});function d(){x.clearRect(0,0,W,H);n.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;});for(let i=0;i<n.length;i++)for(let j=i+1;j<n.length;j++){const dx=n[i].x-n[j].x,dy=n[i].y-n[j].y,dist=Math.sqrt(dx*dx+dy*dy);if(dist<110){x.beginPath();x.moveTo(n[i].x,n[i].y);x.lineTo(n[j].x,n[j].y);x.strokeStyle=`rgba(123,94,167,${(1-dist/110)*.22})`;x.lineWidth=.7;x.stroke();}}n.forEach(p=>{x.beginPath();x.arc(p.x,p.y,1.2,0,Math.PI*2);x.fillStyle='rgba(167,139,250,.5)';x.fill();});requestAnimationFrame(d);}d();})();
+    function checkPW(v){
+      let s=0;if(v.length>=6)s++;if(v.length>=10)s++;if(/[A-Z]/.test(v))s++;if(/[0-9]/.test(v))s++;if(/[^A-Za-z0-9]/.test(v))s++;
+      const L=[{w:'0',bg:'transparent',lbl:'Enter a password',c:'rgba(196,181,253,.35)'},{w:'25%',bg:'#ef4444',lbl:'Too weak',c:'#f87171'},{w:'50%',bg:'#f59e0b',lbl:'Fair',c:'#fbbf24'},{w:'75%',bg:'#3b82f6',lbl:'Good',c:'#60a5fa'},{w:'90%',bg:'#10b981',lbl:'Strong',c:'#34d399'},{w:'100%',bg:'#10b981',lbl:'💪 Very strong!',c:'#34d399'}];
+      const l=L[Math.min(s,5)];const f=document.getElementById('pw-fill'),lb=document.getElementById('pw-lbl');
+      f.style.width=v?l.w:'0';f.style.background=l.bg;lb.textContent=v?l.lbl:'Enter a password';lb.style.color=v?l.c:'rgba(196,181,253,.35)';
+    }
+    async function doRegister(){
+      const nm=document.getElementById('f-name').value.trim(),cl=document.getElementById('f-college').value.trim(),em=document.getElementById('f-email').value.trim(),pw=document.getElementById('f-pw').value;
+      if(!nm||!cl||!em||!pw){showErr('All fields are required.');return;}
+      if(pw.length<6){showErr('Password must be at least 6 characters.');return;}
+      if(!/\S+@\S+\.\S+/.test(em)){showErr('Please enter a valid email.');return;}
+      const btn=document.getElementById('sub-btn');btn.innerHTML='<div class="spinner"></div>';btn.disabled=true;
+      try{
+        const res=await fetch('/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:nm,email:em,password:pw,college:cl})});
+        const d=await res.json();if(!res.ok||!d.success)throw new Error(d.message||'Registration failed');
+        localStorage.setItem('hs_token',d.token);localStorage.setItem('hs_user',JSON.stringify(d.user));location.href='index.html';
+      }catch(err){btn.innerHTML='Create Account →';btn.disabled=false;showErr(err.message);}
+    }
+    function showErr(m){const e=document.getElementById('err-box');e.textContent=m;e.style.display='block';}
+    document.addEventListener('keydown',e=>{if(e.key==='Enter')doRegister();});
+  </script>
+</body>
+</html>

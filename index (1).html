@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>HotShotz — Weekly Creative Battle</title>
+  <meta name="description" content="The weekly creative arena — photos, poems, art, and more. Upload, vote, win." />
+  <meta name="theme-color" content="#050508" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ░░ MESH CANVAS ░░ -->
+<canvas id="mesh-canvas" aria-hidden="true"></canvas>
+
+<!-- ░░ AMBIENT ORBS ░░ -->
+<div class="orbs" aria-hidden="true">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<!-- ░░ PAGES ░░ -->
+<div id="pg-landing"></div>
+<div id="pg-feed"    class="hidden"></div>
+<div id="pg-leader"  class="hidden"></div>
+<div id="pg-upload"  class="hidden"></div>
+<div id="pg-profile" class="hidden"></div>
+
+<!-- ░░ BOTTOM NAV ░░ -->
+<nav class="nav-bar hidden" id="nav-bar" aria-label="Main navigation">
+  <button class="nav-btn" id="nb-feed"    onclick="navTo('feed')"   aria-label="Feed">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span>Feed</span>
+  </button>
+  <button class="nav-btn" id="nb-leader"  onclick="navTo('leader')" aria-label="Leaderboard">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg>
+    <span>Ranks</span>
+  </button>
+  <button class="nav-center-btn" onclick="navTo('upload')" aria-label="Submit work">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+  </button>
+  <button class="nav-btn" id="nb-profile" onclick="navTo('profile')" aria-label="Profile">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <span>Profile</span>
+  </button>
+</nav>
+
+<!-- ░░ FIRE MATCH MODAL ░░ -->
+<div id="fire-modal" class="hidden" style="position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.8);backdrop-filter:blur(12px)">
+  <div style="text-align:center">
+    <div style="font-size:80px;animation:pop .55s cubic-bezier(.34,1.56,.64,1)">🔥</div>
+    <div style="font-family:var(--font-d);font-size:40px;letter-spacing:.08em;color:#fff;margin-top:8px" class="gt">FIRED UP!</div>
+    <div style="font-size:15px;color:rgba(196,181,253,.55);margin-top:8px">This shot is climbing the charts</div>
+  </div>
+</div>
+
+<!-- ░░ TOAST ░░ -->
+<div id="toast" class="hidden" style="position:fixed;bottom:calc(70px+16px);left:50%;transform:translateX(-50%);z-index:150;background:var(--ink3);border:1px solid var(--border2);color:#ede9fe;padding:11px 20px;border-radius:14px;font-size:13px;font-weight:600;box-shadow:0 8px 32px rgba(0,0,0,.5);white-space:nowrap;max-width:90vw;text-align:center"></div>
+
+<script src="app.js"></script>
+</body>
+</html>

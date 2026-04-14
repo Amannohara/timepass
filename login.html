@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Sign In — HotShotz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+  <canvas id="mesh-canvas" aria-hidden="true"></canvas>
+  <div class="orbs" aria-hidden="true"><div class="orb orb-1"></div><div class="orb orb-2"></div></div>
+  <div class="auth-outer">
+    <div class="auth-card glass-strong r2">
+      <div class="auth-logo r1">
+        <div class="auth-logo-box">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+        </div>
+        <div class="auth-h1">WELCOME BACK</div>
+        <div class="auth-sub">Sign in to your HotShotz account</div>
+      </div>
+      <div class="social-row">
+        <button class="btn-ghost social-btn" onclick="alert('Social login coming soon!')"><div class="social-ico" style="background:linear-gradient(135deg,#ea4335,#fbbc05)">G</div> Google</button>
+        <button class="btn-ghost social-btn" onclick="alert('Social login coming soon!')"><div class="social-ico" style="background:#1877f2">f</div> Facebook</button>
+      </div>
+      <div class="div-row"><div class="div-line"></div><span class="div-text">or with email</span><div class="div-line"></div></div>
+      <div class="auth-fields">
+        <input class="inp" id="f-email"    type="email"    placeholder="College email" autocomplete="email"/>
+        <input class="inp" id="f-password" type="password" placeholder="Password" autocomplete="current-password"/>
+      </div>
+      <button class="btn-brand auth-submit" id="sub-btn" onclick="doLogin()">Sign In →</button>
+      <div id="err-box" style="display:none;background:rgba(244,63,94,.12);border:1px solid rgba(244,63,94,.3);color:var(--hot2);padding:11px 14px;border-radius:12px;font-size:13px;margin-top:12px"></div>
+    </div>
+    <div class="auth-switch r3">
+      <span>New to HotShotz? </span>
+      <button onclick="location.href='register.html'">Join free</button>
+    </div>
+    <a href="index.html" style="display:block;text-align:center;margin-top:14px;font-size:12px;color:rgba(196,181,253,.3)">← Back to home</a>
+  </div>
+  <script>
+    if(localStorage.getItem('hs_user')) location.href='index.html';
+    // mesh
+    (function(){const c=document.getElementById('mesh-canvas'),x=c.getContext('2d');let W,H,n=[];function r(){W=c.width=innerWidth;H=c.height=innerHeight;}r();window.addEventListener('resize',r,{passive:true});for(let i=0;i<45;i++)n.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3});function d(){x.clearRect(0,0,W,H);n.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;});for(let i=0;i<n.length;i++)for(let j=i+1;j<n.length;j++){const dx=n[i].x-n[j].x,dy=n[i].y-n[j].y,dist=Math.sqrt(dx*dx+dy*dy);if(dist<110){x.beginPath();x.moveTo(n[i].x,n[i].y);x.lineTo(n[j].x,n[j].y);x.strokeStyle=`rgba(123,94,167,${(1-dist/110)*.22})`;x.lineWidth=.7;x.stroke();}}n.forEach(p=>{x.beginPath();x.arc(p.x,p.y,1.2,0,Math.PI*2);x.fillStyle='rgba(167,139,250,.5)';x.fill();});requestAnimationFrame(d);}d();})();
+    async function doLogin(){
+      const e=document.getElementById('f-email').value.trim(),p=document.getElementById('f-password').value;
+      if(!e||!p){showErr('Email and password required.');return;}
+      const btn=document.getElementById('sub-btn');
+      btn.innerHTML='<div class="spinner"></div>';btn.disabled=true;
+      try{
+        const res=await fetch('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:e,password:p})});
+        const d=await res.json();
+        if(!res.ok||!d.success)throw new Error(d.message||'Login failed');
+        localStorage.setItem('hs_token',d.token);localStorage.setItem('hs_user',JSON.stringify(d.user));
+        location.href='index.html';
+      }catch(err){btn.innerHTML='Sign In →';btn.disabled=false;showErr(err.message);}
+    }
+    function showErr(m){const e=document.getElementById('err-box');e.textContent=m;e.style.display='block';}
+    document.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+  </script>
+</body>
+</html>
